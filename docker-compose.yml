@@ -1,0 +1,100 @@
+version: "3"
+networks:
+  to-do-network:
+volumes:
+  postgres-data:
+
+services:
+  to-do-api:
+    build:
+      context: to-do-api
+    # container name is not necessary
+    container_name: to-do-api
+    # working_dir is an override of the Dockerfile value if needed
+    # working_dir: /usr/src/app
+    networks:
+      - to-do-network
+    # volumes is most useful for hot reloading
+    volumes:
+      - ./to-do-api/src:/usr/src/app/src
+      - ./to-do-api/config:/usr/src/app/config
+      - ./to-do-api/migrations:/usr/src/app/migrations
+    # tty: true
+    ports:
+      - "3030:3030"
+    # only specify command if you need to change it from what is in the Dockerfile
+    # command: npm run dev
+    depends_on:
+      - db
+
+  integration-api:
+    build:
+      context: integration-api
+    # container name is not necessary
+    container_name: integration-api
+    # working_dir is an override of the Dockerfile value if needed
+    # working_dir: /usr/src/app
+    networks:
+      - to-do-network
+    # volumes is most useful for hot reloading
+    volumes:
+      - ./integration-api/src:/usr/src/app/src
+      - ./integration-api/config:/usr/src/app/config
+    # tty: true
+    ports:
+      - "3031:3031"
+    # only specify command if you need to change it from what is in the Dockerfile
+    # command: npm run dev
+    depends_on:
+      - to-do-api
+
+  front-end:
+    build:
+      context: to-do-portal
+    container_name: front-end
+    # working_dir: /usr/src/app
+    networks:
+      - to-do-network
+    volumes:
+      - ./to-do-portal/src:/usr/src/app/src
+    # tty: true
+    # stdin_open: true
+    ports:
+      - "8080:8080"
+    # command: npm run dev
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - integration-api
+
+  db:
+    # image: postgres
+    build:
+      context: postgres
+    container_name: db
+    restart: always
+    # tty: true
+    # we need a volume but we don't need it to persist on local
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      # - ./postgres/docker-entrypoint-initdb.d/setup.sh:/docker-entrypoint-initdb.d/initdb.sh
+    environment:
+      - POSTGRES_PASSWORD=1234
+    ports:
+      - "5432:5432"
+    networks:
+      - to-do-network
+
+  # nginx:
+  #   build:
+  #     context: nginx
+  #   container_name: nginx
+  #   restart: always
+  #   tty: true
+  #   ports:
+  #     - "8000:80"
+  #   networks:
+  #     - node-network
+  #   depends_on:
+  #      - back-end
+  #      - front-end
