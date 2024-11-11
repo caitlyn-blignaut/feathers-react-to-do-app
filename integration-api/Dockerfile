@@ -1,9 +1,9 @@
-FROM node:22-alpine
+FROM node:22.4-alpine
 
 RUN mkdir -p /usr/src/packages
 WORKDIR /usr/src/app
 
-COPY --from=to-do-app-to-do-api /usr/src/packages /usr/src/packages
+COPY --from=feathers-react-to-do-app-to-do-api /usr/src/packages /usr/src/packages
 COPY package*.json .
 
 RUN npm i ../packages/to-do-api-0.0.0.tgz

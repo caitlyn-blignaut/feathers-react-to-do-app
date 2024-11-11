@@ -56,11 +56,13 @@
     "@feathersjs/feathers": "^5.0.29",
     "@feathersjs/knex": "^5.0.29",
     "@feathersjs/koa": "^5.0.29",
+    "@feathersjs/mongodb": "^5.0.31",
     "@feathersjs/schema": "^5.0.29",
     "@feathersjs/socketio": "^5.0.29",
     "@feathersjs/transport-commons": "^5.0.29",
     "@feathersjs/typebox": "^5.0.29",
     "knex": "^3.1.0",
+    "mongodb": "^6.10.0",
     "pg": "^8.12.0",
     "winston": "^3.14.2"
   },

@@ -9,6 +9,7 @@ import type { Application } from './declarations'
 import { logError } from './hooks/log-error'
 import { postgresql } from './postgresql'
 import { authentication } from './authentication'
+import { mongodb } from './mongodb'
 import { services } from './services/index'
 import { channels } from './channels'
 
@@ -35,6 +36,7 @@ app.configure(
 )
 app.configure(postgresql)
 app.configure(authentication)
+app.configure(mongodb)
 app.configure(services)
 app.configure(channels)
 

@@ -1,8 +1,8 @@
-version: "3"
 networks:
   to-do-network:
 volumes:
   postgres-data:
+  mongo-data:
 
 services:
   to-do-api:
@@ -25,7 +25,8 @@ services:
     # only specify command if you need to change it from what is in the Dockerfile
     # command: npm run dev
     depends_on:
-      - db
+      - postgres
+      - mongodb
 
   integration-api:
     build:
@@ -64,14 +65,15 @@ services:
     # command: npm run dev
     environment:
       - CHOKIDAR_USEPOLLING=true
+      - MONGO_URI=mongodb://user:password@mongodb:27017/to-do-api?authSource=admin
     depends_on:
       - integration-api
 
-  db:
+  postgres:
     # image: postgres
     build:
       context: postgres
-    container_name: db
+    container_name: postgres
     restart: always
     # tty: true
     # we need a volume but we don't need it to persist on local
@@ -84,6 +86,29 @@ services:
       - "5432:5432"
     networks:
       - to-do-network
+
+  mongodb:
+    # image: mongo
+    build:
+      context: mongodb
+      args:
+        - NPM_VERSION=${NPM_VERSION}
+        - NODE_VERSION=${NODE_VERSION}
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - to-do-network
+    ports:
+      - 9876:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=admin
+      - ADMIN_DB=admin
+      - MONGO_USER=user
+      - MONGO_USER_PASSWORD=password
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
 
   # nginx:
   #   build:

@@ -11,7 +11,7 @@
   },
   "postgresql": {
     "client": "pg",
-    "connection": "postgres://postgres:1234@db:5432/to_do"
+    "connection": "postgres://postgres:1234@postgres:5432/to_do"
   },
   "authentication": {
     "entity": "user",
@@ -33,5 +33,6 @@
       "usernameField": "email",
       "passwordField": "password"
     }
-  }
+  },
+  "mongodb": "mongodb://user:password@mongodb:27017/to-do-api?authSource=admin"
 }

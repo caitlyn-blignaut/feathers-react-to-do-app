@@ -4,6 +4,14 @@ import type { TransportConnection, Application } from '@feathersjs/feathers'
 import authenticationClient from '@feathersjs/authentication-client'
 import type { AuthenticationClientOptions } from '@feathersjs/authentication-client'
 
+import { multipliersClient } from './services/multipliers/multipliers.shared'
+export type {
+  Multipliers,
+  MultipliersData,
+  MultipliersQuery,
+  MultipliersPatch
+} from './services/multipliers/multipliers.shared'
+
 import { itemsClient } from './services/items/items.shared'
 export type { Items, ItemsData, ItemsQuery, ItemsPatch } from './services/items/items.shared'
 
@@ -26,7 +34,7 @@ export type ClientApplication = Application<ServiceTypes, Configuration>
  * @see https://dove.feathersjs.com/api/client.html
  * @returns The Feathers client application
  */
-export const createClient = <Configuration = any>(
+export const createClient = <Configuration = any,>(
   connection: TransportConnection<ServiceTypes>,
   authenticationOptions: Partial<AuthenticationClientOptions> = {}
 ) => {
@@ -38,5 +46,6 @@ export const createClient = <Configuration = any>(
 
   client.configure(userClient)
   client.configure(itemsClient)
+  client.configure(multipliersClient)
   return client
 }

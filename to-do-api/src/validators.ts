@@ -1,3 +1,4 @@
+import { keywordObjectId } from '@feathersjs/mongodb'
 // For more information about this file see https://dove.feathersjs.com/guides/cli/validators.html
 import { Ajv, addFormats } from '@feathersjs/schema'
 import { TSchema } from '@feathersjs/typebox'
@@ -47,3 +48,6 @@ export const dataValidator: Ajv = createAjv({
 export const queryValidator: Ajv = createAjv({
   coerceTypes: true
 })
+
+dataValidator.addKeyword(keywordObjectId)
+queryValidator.addKeyword(keywordObjectId)

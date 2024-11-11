@@ -1,4 +1,4 @@
-FROM node:22-alpine
+FROM node:22.4-alpine
 
 RUN mkdir -p /usr/src/packages
 WORKDIR /usr/src/app
