@@ -7,11 +7,13 @@ import type { HookContext } from '../../declarations'
 import { dataValidator, queryValidator } from '../../validators'
 import type { ItemsService } from './items.class'
 import { userSchema } from '../users/users.schema'
+import { randomUUID } from 'crypto'
 
 // Main data model schema
 export const itemsSchema = Type.Object(
   {
     id: Type.Number(),
+    uid: Type.String(),
     text: Type.String(),
     checked: Type.Optional(Type.Boolean()),
     userId: Type.Number(),
@@ -38,6 +40,9 @@ export const itemsDataSchema = Type.Pick(itemsSchema, ['text', 'dueDate', 'check
 export type ItemsData = Static<typeof itemsDataSchema>
 export const itemsDataValidator = getValidator(itemsDataSchema, dataValidator)
 export const itemsDataResolver = resolve<Items, HookContext<ItemsService>>({
+  uid: async () => {
+    return randomUUID()
+  },
   userId: async (_value, _item, context) => {
     return context?.params?.user?.id
   },
@@ -56,7 +61,7 @@ export const itemsPatchResolver = resolve<Items, HookContext<ItemsService>>({})
 
 // Schema for allowed query properties
 export const itemsQueryProperties = Type.Pick(itemsSchema, [
-  'id',
+  'uid',
   'text',
   'checked',
   'userId',
